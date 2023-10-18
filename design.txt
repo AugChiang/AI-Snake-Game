@@ -1,0 +1,43 @@
+[Rewards]
+get food     : +10 score
+lose the game: -10 score
+else         :   0 score
+
+[Snake Action] -> Boolean
+turn right: [1,0,0]
+no turn   : [0,1,0]
+turn left : [0,0,1]
+
+[Environment State] -> [Boolean] * 11
+dead ends: [right, left, straight]
+current direction: [up, down, left, right]
+food location: [up, down, left, right]
+
+[Model] -> Q Learning (Quality of Action)
+input        : 11 (state)
+hidden layers: arbitrary
+output       : 3 (action)
+
+[Training Steps]
+1. init Model
+2. choose action via model.predict(state) or random action
+3. perform action
+4. calculate the rewards
+5. update Q value and train the model
+6. repeat step 2~4 till training ends
+
+[Hyperparameters]
+loss function: Bellman Equation and MSE
+
+new Q(s,a) = Q(s,a) +
+             alpha[R(s,a) + gamma*max(Q'(s',a'))-Q(s,a)]
+where Q(s,a)    = current Q value
+      alpha     = learning rate            
+      R(s,a)    = reward for taking 'a' action in 's' state
+      gamma     = discount rate
+      Q'(s',a') = MAX expected future reward,
+                  given all possible s' and a' of that s'
+Q     = model.predict(old state)
+new Q = Reward + gamma*max{Q(new state)}
+
+loss = (new Q - Q) ** 2
